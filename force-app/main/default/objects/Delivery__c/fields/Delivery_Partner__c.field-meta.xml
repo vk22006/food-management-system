@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Delivery_Partner__c</fullName>
+    <label>Delivery Partner</label>
+    <type>Lookup</type>
+    <referenceTo>Contact</referenceTo>
+    <relationshipLabel>Assigned Deliveries</relationshipLabel>
+    <relationshipName>Assigned_Deliveries</relationshipName>
+    <description>Lookup to the Contact record representing the delivery partner assigned to this delivery. Experience Cloud external delivery partner users are backed by Contact records.</description>
+</CustomField>

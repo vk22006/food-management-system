@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>Restaurant</label>
+    <pluralLabel>Restaurants</pluralLabel>
+    <nameField>
+        <label>Restaurant Name</label>
+        <type>Text</type>
+    </nameField>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <sharingModel>ReadWrite</sharingModel>
+    <enableSearch>true</enableSearch>
+    <enableReports>true</enableReports>
+    <enableActivities>true</enableActivities>
+    <enableHistory>true</enableHistory>
+    <description>The Restaurant object stores restaurant profiles available in the food ordering system. It captures the restaurant name, address, and cuisine type and is the parent of Menu Items. Commonly used for menu management, restaurant browsing, and performance reporting.</description>
+</CustomObject>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>Order</label>
+    <pluralLabel>Orders</pluralLabel>
+    <nameField>
+        <displayFormat>ORD-{00000}</displayFormat>
+        <label>Order Number</label>
+        <type>AutoNumber</type>
+        <startingNumber>1</startingNumber>
+    </nameField>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <sharingModel>ReadWrite</sharingModel>
+    <enableSearch>true</enableSearch>
+    <enableReports>true</enableReports>
+    <enableActivities>true</enableActivities>
+    <enableHistory>true</enableHistory>
+    <description>The Order object represents a customer food order. It tracks the auto-numbered order number, date, status (Pending through Delivered), and total amount, linked to a customer Contact. Commonly used for order processing, delivery coordination, and sales reporting.</description>
+</CustomObject>

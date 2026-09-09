@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Availability__c</fullName>
+    <label>Availability</label>
+    <type>Checkbox</type>
+    <defaultValue>true</defaultValue>
+    <description>Indicates whether this menu item is currently available for ordering. Checked means available; unchecked means unavailable.</description>
+</CustomField>

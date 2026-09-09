@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>Menu Item</label>
+    <pluralLabel>Menu Items</pluralLabel>
+    <nameField>
+        <label>Menu Item Name</label>
+        <type>Text</type>
+    </nameField>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <sharingModel>ControlledByParent</sharingModel>
+    <enableSearch>true</enableSearch>
+    <enableReports>true</enableReports>
+    <enableActivities>false</enableActivities>
+    <enableHistory>true</enableHistory>
+    <description>The Menu Item object represents an individual food or beverage item on a restaurant menu. Linked to its Restaurant parent, it tracks category, price, and availability status. Commonly used for menu browsing, order placement, and availability management.</description>
+</CustomObject>

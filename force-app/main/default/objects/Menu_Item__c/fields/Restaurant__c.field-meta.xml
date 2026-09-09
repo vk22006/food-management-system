@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Restaurant__c</fullName>
+    <label>Restaurant</label>
+    <type>MasterDetail</type>
+    <referenceTo>Restaurant__c</referenceTo>
+    <relationshipLabel>Menu Items</relationshipLabel>
+    <relationshipName>Menu_Items</relationshipName>
+    <writeRequiresMasterRead>false</writeRequiresMasterRead>
+    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <description>Master-Detail relationship to the parent Restaurant. A Menu Item cannot exist without a Restaurant.</description>
+</CustomField>

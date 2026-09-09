@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>Order Item</label>
+    <pluralLabel>Order Items</pluralLabel>
+    <nameField>
+        <label>Order Item Name</label>
+        <type>Text</type>
+    </nameField>
+    <deploymentStatus>Deployed</deploymentStatus>
+    <sharingModel>ControlledByParent</sharingModel>
+    <enableSearch>true</enableSearch>
+    <enableReports>true</enableReports>
+    <enableActivities>false</enableActivities>
+    <enableHistory>false</enableHistory>
+    <description>The Order Item object represents a single line item within a customer order. As a child of Order, it captures the product name, quantity, and unit price for each item ordered. Commonly used for order details and itemized billing.</description>
+</CustomObject>

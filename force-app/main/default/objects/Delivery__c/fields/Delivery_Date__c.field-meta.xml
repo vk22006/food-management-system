@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Delivery_Date__c</fullName>
+    <label>Delivery Date</label>
+    <type>DateTime</type>
+    <description>The date and time when the delivery was completed or is expected to be completed. Updated by the delivery partner when the order is delivered.</description>
+</CustomField>

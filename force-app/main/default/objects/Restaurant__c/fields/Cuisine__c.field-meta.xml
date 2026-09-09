@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Cuisine__c</fullName>
+    <label>Cuisine</label>
+    <type>Text</type>
+    <length>255</length>
+    <description>The type of cuisine offered by the restaurant (e.g., Italian, Indian, Chinese). Free-form text to accommodate any cuisine category.</description>
+</CustomField>

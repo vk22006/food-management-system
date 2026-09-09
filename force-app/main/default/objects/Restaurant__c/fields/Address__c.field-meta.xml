@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Address__c</fullName>
+    <label>Address</label>
+    <type>TextArea</type>
+    <description>The physical street address of the restaurant. Free-form text to accommodate varied address formats.</description>
+</CustomField>
