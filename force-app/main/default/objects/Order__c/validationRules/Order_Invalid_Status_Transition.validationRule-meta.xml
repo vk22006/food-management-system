@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Order_Invalid_Status_Transition</fullName>
+    <active>true</active>
+    <description>Prevents invalid Order status transitions. Blocks any change once the Order is in a terminal state (Delivered or Cancelled). Also blocks backwards transitions that violate the defined lifecycle.</description>
+    <errorConditionFormula><![CDATA[
+ISCHANGED(Status__c) &&
+(
+    ISPICKVAL(PRIORVALUE(Status__c), "Delivered") ||
+    ISPICKVAL(PRIORVALUE(Status__c), "Cancelled") ||
+    (ISPICKVAL(PRIORVALUE(Status__c), "Accepted") &&
+        ISPICKVAL(Status__c, "Pending")) ||
+    (ISPICKVAL(PRIORVALUE(Status__c), "Preparing") &&
+        (ISPICKVAL(Status__c, "Pending") || ISPICKVAL(Status__c, "Accepted"))) ||
+    (ISPICKVAL(PRIORVALUE(Status__c), "Out for Delivery") &&
+        (ISPICKVAL(Status__c, "Pending") || ISPICKVAL(Status__c, "Accepted") || ISPICKVAL(Status__c, "Preparing")))
+)
+    ]]></errorConditionFormula>
+    <errorDisplayField>Status__c</errorDisplayField>
+    <errorMessage>Invalid status transition. Terminal statuses (Delivered, Cancelled) cannot be changed. Lifecycle order: Pending - Accepted - Preparing - Out for Delivery - Delivered.</errorMessage>
+</ValidationRule>
