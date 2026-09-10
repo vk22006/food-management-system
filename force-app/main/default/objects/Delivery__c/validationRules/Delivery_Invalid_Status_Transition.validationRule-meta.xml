@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Delivery_Invalid_Status_Transition</fullName>
+    <active>true</active>
+    <description>Prevents invalid Delivery status transitions. Delivered is a terminal state and cannot be changed. Backwards transitions are blocked: Out for Delivery cannot revert to Assigned or Picked Up, and Picked Up cannot revert to Assigned.</description>
+    <errorConditionFormula><![CDATA[
+ISCHANGED(Status__c) &&
+(
+    ISPICKVAL(PRIORVALUE(Status__c), "Delivered") ||
+    (ISPICKVAL(PRIORVALUE(Status__c), "Out for Delivery") &&
+        (ISPICKVAL(Status__c, "Assigned") || ISPICKVAL(Status__c, "Picked Up"))) ||
+    (ISPICKVAL(PRIORVALUE(Status__c), "Picked Up") &&
+        ISPICKVAL(Status__c, "Assigned"))
+)
+    ]]></errorConditionFormula>
+    <errorDisplayField>Status__c</errorDisplayField>
+    <errorMessage>Invalid delivery status transition. Delivered is a terminal state. Valid progressions are: Assigned to Picked Up, Assigned to Out for Delivery, Assigned to Delivered, Picked Up to Out for Delivery, Picked Up to Delivered, Out for Delivery to Delivered.</errorMessage>
+</ValidationRule>
