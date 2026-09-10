@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomApplication xmlns="http://soap.sforce.com/2006/04/metadata">
+    <brand>
+        <headerColor>#E87722</headerColor>
+        <shouldOverrideOrgTheme>false</shouldOverrideOrgTheme>
+    </brand>
+    <defaultLandingTab>standard-home</defaultLandingTab>
+    <description>Internal Lightning application for managing restaurants, menu items, orders, order items, and deliveries.</description>
+    <formFactors>Large</formFactors>
+    <isNavAutoTempTabsDisabled>false</isNavAutoTempTabsDisabled>
+    <isNavPersonalizationDisabled>false</isNavPersonalizationDisabled>
+    <label>Food Order Management</label>
+    <navType>Standard</navType>
+    <tabs>standard-home</tabs>
+    <tabs>Restaurant__c</tabs>
+    <tabs>Menu_Item__c</tabs>
+    <tabs>Order__c</tabs>
+    <tabs>Order_Item__c</tabs>
+    <tabs>Delivery__c</tabs>
+    <tabs>standard-report</tabs>
+    <tabs>standard-dashboard</tabs>
+    <uiType>Lightning</uiType>
+</CustomApplication>
