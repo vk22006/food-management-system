@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>67.0</apiVersion>
+    <description>When a new Delivery record is created without a Delivery Partner, automatically queries for an available Contact with Title equal to Delivery Partner and assigns them. If no partner is found the record is left unassigned for manual assignment.</description>
+    <interviewLabel>Delivery Auto Assign Partner {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Delivery - Auto Assign Partner</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Get_Available_Delivery_Partner</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Delivery_Partner__c</field>
+            <operator>IsNull</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <object>Delivery__c</object>
+        <recordTriggerType>Create</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <recordLookups>
+        <name>Get_Available_Delivery_Partner</name>
+        <label>Get Available Delivery Partner</label>
+        <locationX>176</locationX>
+        <locationY>168</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Check_Partner_Found</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Title</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Delivery Partner</stringValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Contact</object>
+        <queriedFields>Id</queriedFields>
+        <queriedFields>FirstName</queriedFields>
+        <queriedFields>LastName</queriedFields>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <decisions>
+        <name>Check_Partner_Found</name>
+        <label>Delivery Partner Found?</label>
+        <locationX>176</locationX>
+        <locationY>288</locationY>
+        <defaultConnectorLabel>No Partner Available</defaultConnectorLabel>
+        <rules>
+            <name>Partner_Was_Found</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Available_Delivery_Partner</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Assign_Delivery_Partner</targetReference>
+            </connector>
+            <label>Partner Found</label>
+        </rules>
+    </decisions>
+    <recordUpdates>
+        <name>Assign_Delivery_Partner</name>
+        <label>Assign Delivery Partner</label>
+        <locationX>176</locationX>
+        <locationY>408</locationY>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>Delivery_Partner__c</field>
+            <value>
+                <elementReference>Get_Available_Delivery_Partner.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Delivery__c</object>
+    </recordUpdates>
+</Flow>

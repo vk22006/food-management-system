@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>67.0</apiVersion>
+    <description>When an Order status changes, synchronises the related Delivery record status. Maps Order status Out for Delivery to Delivery status Out for Delivery, and Order status Delivered to Delivery status Delivered.</description>
+    <interviewLabel>Order Status Update Processing {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Order - Status Update Processing</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Route_By_New_Status</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Status__c</field>
+            <operator>IsChanged</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <object>Order__c</object>
+        <recordTriggerType>Update</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+    <decisions>
+        <name>Route_By_New_Status</name>
+        <label>Route by New Status</label>
+        <locationX>176</locationX>
+        <locationY>168</locationY>
+        <defaultConnectorLabel>No Delivery Sync Required</defaultConnectorLabel>
+        <rules>
+            <name>Status_Is_Out_For_Delivery</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Status__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Out for Delivery</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Update_Delivery_Out_For_Delivery</targetReference>
+            </connector>
+            <label>Out for Delivery</label>
+        </rules>
+        <rules>
+            <name>Status_Is_Delivered</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Status__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Delivered</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Update_Delivery_Delivered</targetReference>
+            </connector>
+            <label>Delivered</label>
+        </rules>
+    </decisions>
+    <recordUpdates>
+        <name>Update_Delivery_Out_For_Delivery</name>
+        <label>Update Delivery - Out for Delivery</label>
+        <locationX>50</locationX>
+        <locationY>288</locationY>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Order__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>Status__c</field>
+            <value>
+                <stringValue>Out for Delivery</stringValue>
+            </value>
+        </inputAssignments>
+        <object>Delivery__c</object>
+    </recordUpdates>
+    <recordUpdates>
+        <name>Update_Delivery_Delivered</name>
+        <label>Update Delivery - Delivered</label>
+        <locationX>302</locationX>
+        <locationY>288</locationY>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Order__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>Status__c</field>
+            <value>
+                <stringValue>Delivered</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Delivery_Date__c</field>
+            <value>
+                <elementReference>$Flow.CurrentDateTime</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Delivery__c</object>
+    </recordUpdates>
+</Flow>

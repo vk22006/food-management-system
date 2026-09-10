@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>67.0</apiVersion>
+    <actionCalls>
+        <name>Send_Order_Placed_Email</name>
+        <label>Send Order Placed Email</label>
+        <locationX>50</locationX>
+        <locationY>648</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>Get_Customer_Contact.Email</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <stringValue>Your Order Has Been Placed Successfully</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <stringValue>Thank you for your order! Your order has been placed and is currently Pending. We will notify you as soon as it is accepted by the restaurant.</stringValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <name>Send_Status_Update_Email</name>
+        <label>Send Status Update Email</label>
+        <locationX>302</locationX>
+        <locationY>648</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>Get_Customer_Contact.Email</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <stringValue>Your Order Status Has Been Updated</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <stringValue>Good news! Your order status has been updated to: {!$Record.Status__c}. Thank you for ordering with us.</stringValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <decisions>
+        <name>Check_Customer_Exists</name>
+        <label>Customer Lookup Populated?</label>
+        <locationX>176</locationX>
+        <locationY>168</locationY>
+        <defaultConnectorLabel>No Customer</defaultConnectorLabel>
+        <rules>
+            <name>Customer_Is_Set</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Customer__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Get_Customer_Contact</targetReference>
+            </connector>
+            <label>Customer Is Set</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Check_Email_Available</name>
+        <label>Customer Email Available?</label>
+        <locationX>176</locationX>
+        <locationY>408</locationY>
+        <defaultConnectorLabel>No Email on Contact</defaultConnectorLabel>
+        <rules>
+            <name>Email_Is_Present</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Customer_Contact.Email</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Check_Is_New_Order</targetReference>
+            </connector>
+            <label>Email Present</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Check_Is_New_Order</name>
+        <label>Is This a New Order?</label>
+        <locationX>176</locationX>
+        <locationY>528</locationY>
+        <defaultConnectorLabel>Status Update</defaultConnectorLabel>
+        <defaultConnector>
+            <targetReference>Send_Status_Update_Email</targetReference>
+        </defaultConnector>
+        <rules>
+            <name>Is_New_Record</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record__Prior.Status__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Send_Order_Placed_Email</targetReference>
+            </connector>
+            <label>New Order</label>
+        </rules>
+    </decisions>
+    <description>Sends an email notification to the Customer when an Order is created or when the Order Status changes. Retrieves the customer Contact email and sends an appropriate message based on whether the order is new or an existing status update.</description>
+    <interviewLabel>Order Email Notification {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Order - Email Notification</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <name>Get_Customer_Contact</name>
+        <label>Get Customer Contact</label>
+        <locationX>176</locationX>
+        <locationY>288</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Check_Email_Available</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Customer__c</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Contact</object>
+        <queriedFields>Id</queriedFields>
+        <queriedFields>Email</queriedFields>
+        <queriedFields>FirstName</queriedFields>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Check_Customer_Exists</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Status__c</field>
+            <operator>IsChanged</operator>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </filters>
+        <filters>
+            <field>Customer__c</field>
+            <operator>IsNull</operator>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </filters>
+        <object>Order__c</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>
