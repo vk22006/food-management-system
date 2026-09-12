@@ -61,7 +61,7 @@ public with sharing class DeliveryChargeCalculator {
         if (charge < MINIMUM_CHARGE) {
             charge = MINIMUM_CHARGE;
         }
-        return charge;
 
+        return charge.setScale(2, RoundingMode.HALF_UP);
     }
 }
