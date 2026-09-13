@@ -24,12 +24,27 @@ trigger OrderItemTrigger on Order_Item__c (
 ) {
     Set<Id> orderIds = new Set<Id>();
 
-    // In delete context Trigger.new is null — use Trigger.old to get parent IDs.
-    List<Order_Item__c> records = Trigger.isDelete ? Trigger.old : Trigger.new;
-
-    for (Order_Item__c item : records) {
-        if (item.Order__c != null) {
-            orderIds.add(item.Order__c);
+    if (Trigger.isInsert || Trigger.isUndelete) {
+        for (Order_Item__c item : Trigger.new) {
+            if (item.Order__c != null) {
+                orderIds.add(item.Order__c);
+            }
+        }
+    } else if (Trigger.isDelete) {
+        for (Order_Item__c item : Trigger.old) {
+            if (item.Order__c != null) {
+                orderIds.add(item.Order__c);
+            }
+        }
+    } else if (Trigger.isUpdate) {
+        for (Order_Item__c item : Trigger.new) {
+            if (item.Order__c != null) {
+                orderIds.add(item.Order__c);
+            }
+            Order_Item__c oldItem = Trigger.oldMap.get(item.Id);
+            if (oldItem != null && oldItem.Order__c != null && oldItem.Order__c != item.Order__c) {
+                orderIds.add(oldItem.Order__c);
+            }
         }
     }
 
