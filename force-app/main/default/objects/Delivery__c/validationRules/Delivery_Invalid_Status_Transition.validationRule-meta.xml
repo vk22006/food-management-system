@@ -3,16 +3,14 @@
     <fullName>Delivery_Invalid_Status_Transition</fullName>
     <active>true</active>
     <description>Prevents invalid Delivery status transitions. Delivered is a terminal state and cannot be changed. Backwards transitions are blocked: Out for Delivery cannot revert to Assigned or Picked Up, and Picked Up cannot revert to Assigned.</description>
-    <errorConditionFormula><![CDATA[
-ISCHANGED(Status__c) &&
+    <errorConditionFormula>ISCHANGED(Status__c) &amp;&amp;
 (
-    ISPICKVAL(PRIORVALUE(Status__c), "Delivered") ||
-    (ISPICKVAL(PRIORVALUE(Status__c), "Out for Delivery") &&
-        (ISPICKVAL(Status__c, "Assigned") || ISPICKVAL(Status__c, "Picked Up"))) ||
-    (ISPICKVAL(PRIORVALUE(Status__c), "Picked Up") &&
-        ISPICKVAL(Status__c, "Assigned"))
-)
-    ]]></errorConditionFormula>
+    ISPICKVAL(PRIORVALUE(Status__c), &quot;Delivered&quot;) ||
+    (ISPICKVAL(PRIORVALUE(Status__c), &quot;Out for Delivery&quot;) &amp;&amp;
+        (ISPICKVAL(Status__c, &quot;Assigned&quot;) || ISPICKVAL(Status__c, &quot;Picked Up&quot;))) ||
+    (ISPICKVAL(PRIORVALUE(Status__c), &quot;Picked Up&quot;) &amp;&amp;
+        ISPICKVAL(Status__c, &quot;Assigned&quot;))
+)</errorConditionFormula>
     <errorDisplayField>Status__c</errorDisplayField>
     <errorMessage>Invalid delivery status transition. Delivered is a terminal state. Valid progressions are: Assigned to Picked Up, Assigned to Out for Delivery, Assigned to Delivered, Picked Up to Out for Delivery, Picked Up to Delivered, Out for Delivery to Delivered.</errorMessage>
 </ValidationRule>
