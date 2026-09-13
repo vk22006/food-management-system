@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
-    <apiVersion>67.0</apiVersion>
     <actionCalls>
         <name>Send_Partner_Notification</name>
         <label>Send Partner Notification</label>
-        <locationX>176</locationX>
-        <locationY>768</locationY>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
         <actionName>customNotificationAction</actionName>
         <actionType>customNotificationAction</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
         <inputParameters>
             <name>customNotifTypeId</name>
             <value>
@@ -38,12 +38,15 @@
                 <elementReference>$Record.Id</elementReference>
             </value>
         </inputParameters>
+        <nameSegment>customNotificationAction</nameSegment>
     </actionCalls>
+    <apiVersion>67.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
     <assignments>
         <name>Build_Partner_Recipient</name>
         <label>Build Partner Recipient</label>
-        <locationX>176</locationX>
-        <locationY>648</locationY>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
         <assignmentItems>
             <assignToReference>partnerRecipientIds</assignToReference>
             <operator>Add</operator>
@@ -58,8 +61,8 @@
     <decisions>
         <name>Check_Notif_Type_Found</name>
         <label>Notification Type Found?</label>
-        <locationX>176</locationX>
-        <locationY>288</locationY>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
         <defaultConnectorLabel>No Notification Type</defaultConnectorLabel>
         <rules>
             <name>Notif_Type_Exists</name>
@@ -80,8 +83,8 @@
     <decisions>
         <name>Check_Partner_User_Found</name>
         <label>Partner User Found?</label>
-        <locationX>176</locationX>
-        <locationY>528</locationY>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
         <defaultConnectorLabel>No User Account for Partner</defaultConnectorLabel>
         <rules>
             <name>Partner_User_Exists</name>
@@ -118,8 +121,8 @@
     <recordLookups>
         <name>Get_Notification_Type</name>
         <label>Get Notification Type</label>
-        <locationX>176</locationX>
-        <locationY>168</locationY>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Check_Notif_Type_Found</targetReference>
@@ -140,8 +143,8 @@
     <recordLookups>
         <name>Get_Partner_User</name>
         <label>Get Partner User</label>
-        <locationX>176</locationX>
-        <locationY>408</locationY>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Check_Partner_User_Found</targetReference>
@@ -167,7 +170,7 @@
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <start>
-        <locationX>50</locationX>
+        <locationX>0</locationX>
         <locationY>0</locationY>
         <connector>
             <targetReference>Get_Notification_Type</targetReference>

@@ -1,35 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>67.0</apiVersion>
-    <description>When an Order status changes, synchronises the related Delivery record status. Maps Order status Out for Delivery to Delivery status Out for Delivery, and Order status Delivered to Delivery status Delivered.</description>
-    <interviewLabel>Order Status Update Processing {!$Flow.CurrentDateTime}</interviewLabel>
-    <label>Order - Status Update Processing</label>
-    <processMetadataValues>
-        <name>BuilderType</name>
-        <value>
-            <stringValue>LightningFlowBuilder</stringValue>
-        </value>
-    </processMetadataValues>
-    <processType>AutoLaunchedFlow</processType>
-    <start>
-        <locationX>50</locationX>
-        <locationY>0</locationY>
-        <connector>
-            <targetReference>Route_By_New_Status</targetReference>
-        </connector>
-        <filterLogic>and</filterLogic>
-        <filters>
-            <field>Status__c</field>
-            <operator>IsChanged</operator>
-            <value>
-                <booleanValue>true</booleanValue>
-            </value>
-        </filters>
-        <object>Order__c</object>
-        <recordTriggerType>Update</recordTriggerType>
-        <triggerType>RecordAfterSave</triggerType>
-    </start>
-    <status>Active</status>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
     <decisions>
         <name>Route_By_New_Status</name>
         <label>Route by New Status</label>
@@ -67,6 +39,43 @@
             <label>Delivered</label>
         </rules>
     </decisions>
+    <description>When an Order status changes, synchronises the related Delivery record status. Maps Order status Out for Delivery to Delivery status Out for Delivery, and Order status Delivered to Delivery status Delivered.</description>
+    <interviewLabel>Order Status Update Processing {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Order - Status Update Processing</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordUpdates>
+        <name>Update_Delivery_Delivered</name>
+        <label>Update Delivery - Delivered</label>
+        <locationX>302</locationX>
+        <locationY>288</locationY>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Order__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>Delivery_Date__c</field>
+            <value>
+                <elementReference>$Flow.CurrentDateTime</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Status__c</field>
+            <value>
+                <stringValue>Delivered</stringValue>
+            </value>
+        </inputAssignments>
+        <object>Delivery__c</object>
+    </recordUpdates>
     <recordUpdates>
         <name>Update_Delivery_Out_For_Delivery</name>
         <label>Update Delivery - Out for Delivery</label>
@@ -88,31 +97,23 @@
         </inputAssignments>
         <object>Delivery__c</object>
     </recordUpdates>
-    <recordUpdates>
-        <name>Update_Delivery_Delivered</name>
-        <label>Update Delivery - Delivered</label>
-        <locationX>302</locationX>
-        <locationY>288</locationY>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Route_By_New_Status</targetReference>
+        </connector>
         <filterLogic>and</filterLogic>
         <filters>
-            <field>Order__c</field>
-            <operator>EqualTo</operator>
+            <field>Status__c</field>
+            <operator>IsChanged</operator>
             <value>
-                <elementReference>$Record.Id</elementReference>
+                <booleanValue>true</booleanValue>
             </value>
         </filters>
-        <inputAssignments>
-            <field>Status__c</field>
-            <value>
-                <stringValue>Delivered</stringValue>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>Delivery_Date__c</field>
-            <value>
-                <elementReference>$Flow.CurrentDateTime</elementReference>
-            </value>
-        </inputAssignments>
-        <object>Delivery__c</object>
-    </recordUpdates>
+        <object>Order__c</object>
+        <recordTriggerType>Update</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
 </Flow>

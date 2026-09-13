@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
-    <apiVersion>67.0</apiVersion>
     <actionCalls>
         <name>Send_Order_Placed_Email</name>
         <label>Send Order Placed Email</label>
@@ -8,6 +7,7 @@
         <locationY>648</locationY>
         <actionName>emailSimple</actionName>
         <actionType>emailSimple</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
         <inputParameters>
             <name>emailAddresses</name>
             <value>
@@ -26,6 +26,7 @@
                 <stringValue>Thank you for your order! Your order has been placed and is currently Pending. We will notify you as soon as it is accepted by the restaurant.</stringValue>
             </value>
         </inputParameters>
+        <nameSegment>emailSimple</nameSegment>
     </actionCalls>
     <actionCalls>
         <name>Send_Status_Update_Email</name>
@@ -34,6 +35,7 @@
         <locationY>648</locationY>
         <actionName>emailSimple</actionName>
         <actionType>emailSimple</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
         <inputParameters>
             <name>emailAddresses</name>
             <value>
@@ -52,7 +54,10 @@
                 <stringValue>Good news! Your order status has been updated to: {!$Record.Status__c}. Thank you for ordering with us.</stringValue>
             </value>
         </inputParameters>
+        <nameSegment>emailSimple</nameSegment>
     </actionCalls>
+    <apiVersion>67.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
     <decisions>
         <name>Check_Customer_Exists</name>
         <label>Customer Lookup Populated?</label>
@@ -102,10 +107,10 @@
         <label>Is This a New Order?</label>
         <locationX>176</locationX>
         <locationY>528</locationY>
-        <defaultConnectorLabel>Status Update</defaultConnectorLabel>
         <defaultConnector>
             <targetReference>Send_Status_Update_Email</targetReference>
         </defaultConnector>
+        <defaultConnectorLabel>Status Update</defaultConnectorLabel>
         <rules>
             <name>Is_New_Record</name>
             <conditionLogic>and</conditionLogic>
