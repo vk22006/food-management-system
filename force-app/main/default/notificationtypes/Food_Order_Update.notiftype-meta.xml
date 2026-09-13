@@ -5,4 +5,5 @@
     <desktop>true</desktop>
     <masterLabel>Food Order Update</masterLabel>
     <mobile>true</mobile>
+    <slack>false</slack>
 </CustomNotificationType>
