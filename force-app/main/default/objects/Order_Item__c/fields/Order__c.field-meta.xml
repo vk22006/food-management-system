@@ -7,6 +7,6 @@
     <relationshipLabel>Order Items</relationshipLabel>
     <relationshipName>Order_Items</relationshipName>
     <writeRequiresMasterRead>false</writeRequiresMasterRead>
-    <reparentableMasterDetail>false</reparentableMasterDetail>
+    <reparentableMasterDetail>true</reparentableMasterDetail>
     <description>Master-Detail relationship to the parent Order. An Order Item cannot exist without an Order.</description>
 </CustomField>
