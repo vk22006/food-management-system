@@ -39,6 +39,7 @@
             </value>
         </inputParameters>
         <nameSegment>customNotificationAction</nameSegment>
+        <offset>0</offset>
     </actionCalls>
     <actionCalls>
         <name>Send_Preparing_Email</name>
@@ -70,6 +71,7 @@
             </value>
         </inputParameters>
         <nameSegment>emailSimple</nameSegment>
+        <offset>0</offset>
     </actionCalls>
     <apiVersion>67.0</apiVersion>
     <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
@@ -200,6 +202,7 @@
         </rules>
     </decisions>
     <description>Sends restaurant staff an in-app notification when a new Order is created (Status moves to Pending for the first time), and an email notification when an Order status changes to Preparing. Uses Profile.Name = Restaurant Staff to identify recipients.</description>
+    <environments>Default</environments>
     <interviewLabel>Order Restaurant Staff Notifications {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Order - Restaurant Staff Notifications</label>
     <loops>
@@ -273,7 +276,7 @@
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
-            <field>null__NotFound</field>
+            <field>Department</field>
             <operator>EqualTo</operator>
             <value>
                 <stringValue>Restaurant Staff</stringValue>
@@ -303,7 +306,7 @@
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
-            <field>null__NotFound</field>
+            <field>Department</field>
             <operator>EqualTo</operator>
             <value>
                 <stringValue>Restaurant Staff</stringValue>
