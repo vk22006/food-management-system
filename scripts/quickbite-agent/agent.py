@@ -1,7 +1,10 @@
 from pathlib import Path
 from ollama import chat
-from tools import get_menu_tool
-from tools import get_order_tool
+from tools import (
+    get_menu_tool,
+    get_order_tool,
+    get_delivery_tool
+)
 
 
 # Load QuickBite knowledge base
@@ -75,6 +78,27 @@ tools = [
                 "required": ["order_name"]
             }
         }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "get_delivery",
+            "description": (
+                "Get the current delivery status for a QuickBite order. "
+                "Use this when the customer asks where their order is, "
+                "whether it has been picked up, or about delivery progress."
+            ),
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "order_name": {
+                        "type": "string",
+                        "description": "The QuickBite order number, such as ORD-00006."
+                    }
+                },
+                "required": ["order_name"]
+            }
+        }
     }    
 ]
 
@@ -86,7 +110,7 @@ messages = [
     },
     {
         "role": "user",
-        "content": "What is the status of my order ORD-00006?"
+        "content": "Tell me about ORD-00006"
     }
 ]
 
@@ -115,6 +139,16 @@ if response.message.tool_calls:
             )
 
             result = get_order_tool(order_name)
+
+        elif tool_name == "get_delivery":
+            order_name = tool_call.function.arguments["order_name"]
+
+            print(
+                f"\n[Agent] Calling Salesforce: "
+                f"get_delivery({order_name})"
+            )
+
+            result = get_delivery_tool(order_name)
 
         else:
             result = {
