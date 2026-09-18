@@ -133,6 +133,8 @@ The assistant can:
 
 The AI assistant communicates with Salesforce through the project's REST APIs.
 
+![cli-agent](docs/img/agent.png)
+
 > **Note:** The local AI assistant is an external/local AI integration and is not Salesforce Agentforce.
 
 ---
