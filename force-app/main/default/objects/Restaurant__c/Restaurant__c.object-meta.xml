@@ -168,6 +168,6 @@
         <profileName>System Administrator</profileName>
     </profileSearchLayouts>
     <searchLayouts></searchLayouts>
-    <sharingModel>ReadWrite</sharingModel>
+    <sharingModel>Read</sharingModel>
     <visibility>Public</visibility>
 </CustomObject>
