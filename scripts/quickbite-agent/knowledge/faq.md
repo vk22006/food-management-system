@@ -39,6 +39,17 @@ Delivery statuses include:
 
 Customers can view available QuickBite menu items and their prices.
 
+## Currency
+
+QuickBite operates in India.
+
+All prices and monetary amounts are in Indian Rupees (INR).
+
+When displaying prices or monetary amounts to customers, use the ₹ symbol
+or explicitly write INR.
+
+Do not assume or use USD, dollars, euros, or other currencies.
+
 ## Support Policy
 
 Do not invent delivery times, preparation times, refund policies, contact numbers,
