@@ -1,0 +1,6 @@
+
+# Confidential information
+.env.example
+
+# Local Environemnt
+.venv
