@@ -61,14 +61,14 @@ def get_salesforce_connection():
 # GET - Menu Details
 
 def get_menu():
-    token = get_salesforce_connection()
+    connection = get_salesforce_connection()
 
-    url = f"{BASE_URL}/services/apexrest/menu"
+    url = f"{connection['instance_url']}/services/apexrest/menu"
 
     response = requests.get(
         url,
         headers={
-            "Authorization": f"Bearer {token}",
+            "Authorization": f"Bearer {connection['access_token']}",
         },
         timeout=15,
     )
@@ -79,8 +79,9 @@ def get_menu():
 
 # GET - Order by Name
 
-def find_order_by_name(order_name):
-    connection = get_salesforce_connection()
+def find_order_by_name(order_name, connection=None):
+    if connection is None:
+        connection = get_salesforce_connection()
 
     safe_order_name = (
         order_name
@@ -120,7 +121,10 @@ def find_order_by_name(order_name):
 def get_order(order_name):
     connection = get_salesforce_connection()
 
-    order_id = find_order_by_name(order_name)
+    order_id = find_order_by_name(
+        order_name,
+        connection
+    )
 
     if not order_id:
         return {
@@ -144,8 +148,9 @@ def get_order(order_name):
 
 # GET - Delivery details
 
-def find_delivery_by_order(order_name):
-    connection = get_salesforce_connection()
+def find_delivery_by_order(order_name, connection=None):
+    if connection is None:
+        connection = get_salesforce_connection()
 
     safe_order_name = (
         order_name
@@ -184,7 +189,10 @@ def find_delivery_by_order(order_name):
 def get_delivery(order_name):
     connection = get_salesforce_connection()
 
-    delivery_id = find_delivery_by_order(order_name)
+    delivery_id = find_delivery_by_order(
+        order_name,
+        connection
+    )
 
     if not delivery_id:
         return {
