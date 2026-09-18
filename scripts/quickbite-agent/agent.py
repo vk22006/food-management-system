@@ -5,11 +5,18 @@ Interactive CLI chatbot powered by Qwen3 4B (via Ollama) with
 Salesforce tool-calling for menu, order, and delivery queries.
 """
 
+import sys
+import time
+import json
 from pathlib import Path
 from ollama import chat
 from tools import get_menu_tool, get_order_tool, get_delivery_tool
-import time
-import json
+
+# Ensure UTF-8 encoding on Windows terminals for currency symbols (₹) and emojis
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8")
 
 
 # ---------------------------------------------------------------------------
@@ -38,13 +45,13 @@ ACCURACY RULES:
 - Never invent order status, delivery times, preparation times, refund policies, discounts, phone numbers, guarantees, tracking information, or business policies.
 - If an order is not found, say it was not found. Do not invent a status.
 - Do not infer an order's status from the absence of a delivery record.
-- Only say a delivery partner is assigned when deliveryPartnerName or deliveryPartnerId is present in the tool result.
-- Treat deliveryStatus "Assigned" as the delivery record state, not proof that a specific partner is assigned.
+- If deliveryStatus is "Assigned" and deliveryPartnerName is not provided, state that the order is assigned for delivery and awaiting partner assignment.
+- Only mention a delivery partner name when deliveryPartnerName is present in the tool result.
 - All monetary amounts are in INR. Use the ₹ symbol.
 
 RESPONSE STYLE:
 - Be concise, friendly, and professional.
-- Answer the customer directly.
+- Answer the customer directly in 1-2 sentences.
 
 QUICKBITE KNOWLEDGE BASE:
 {faq}
@@ -106,20 +113,6 @@ TOOLS = [
 
 
 # ---------------------------------------------------------------------------
-# Instruction injected before the final LLM call (after tool results).
-# Sent as a 'user' message so Qwen3 attends to it strongly.
-# Removed from history after generation so it doesn't pollute future turns.
-# ---------------------------------------------------------------------------
-
-FINAL_ANSWER_INSTRUCTION = (
-    "Reply to the customer in 1-2 sentences. "
-    "Start your reply directly with the information. "
-    "Example: 'Your order ORD-00006 is currently being prepared. "
-    "No delivery partner has been assigned yet.'"
-)
-
-
-# ---------------------------------------------------------------------------
 # Tool dispatch
 # ---------------------------------------------------------------------------
 
@@ -153,6 +146,8 @@ _REASONING_PREFIXES = (
     "so,", "so ", "based on", "according to", "the response",
     "the tool", "looking at", "let's", "i'll", "wait,",
     "wait ", "i want", "now,", "now ", "first,", "first ",
+    "the example", "in this case", "to answer", "my task",
+    "i must", "i will", "firstly", "secondly",
 )
 
 # Keywords that suggest a sentence contains customer-facing content.
@@ -165,18 +160,19 @@ _CUSTOMER_KEYWORDS = (
 
 
 def clean_response(text):
-    """Strip reasoning preamble that Qwen3 4B sometimes emits despite
-    instructions.  Uses two strategies:
-    1. Strip leading reasoning lines (prefix check).
-    2. If everything was stripped, scan sentences for customer-facing
-       content (order numbers, statuses, prices).
-    """
+    """Strip reasoning tokens or preamble that Qwen3 4B might emit."""
     if not text:
-        return text
+        return ""
+
+    # 1. Strip think tags if present in content
+    if "</think>" in text:
+        text = text.split("</think>")[-1].strip()
+    import re
+    text = re.sub(r'<think>.*?</think>', '', text, flags=re.DOTALL).strip()
 
     lines = text.strip().splitlines()
 
-    # --- Strategy 1: strip leading reasoning lines ---
+    # Strategy 1: strip leading reasoning lines (prefix check)
     cleaned = []
     past_preamble = False
     for line in lines:
@@ -187,35 +183,34 @@ def clean_response(text):
         cleaned.append(line)
 
     if cleaned:
-        return "\n".join(cleaned).strip()
-
-    # --- Strategy 2: extract customer-facing sentences ---
-    # Split the entire text into sentences and keep those that contain
-    # customer-relevant keywords (order numbers, statuses, prices).
-    import re
-    sentences = re.split(r'(?<=[.!?])\s+', text.strip())
-    useful = [
-        s for s in sentences
-        if any(kw in s.lower() for kw in _CUSTOMER_KEYWORDS)
-    ]
-    if useful:
-        # Strip reasoning preamble from the start of each sentence.
-        # e.g. "I need to state that the order..." → "The order..."
-        _STRIP_RE = re.compile(
-            r'^(I need to (state|say|mention|tell|note) that\s*'
-            r'|I should (state|say|mention|tell|note) that\s*'
-            r'|I want to (state|say|mention|tell|note) that\s*)',
-            re.IGNORECASE,
-        )
-        cleaned_sentences = [_STRIP_RE.sub('', s).strip() for s in useful]
-        # Capitalize first letter after stripping
-        cleaned_sentences = [
-            s[0].upper() + s[1:] if s else s for s in cleaned_sentences
+        result = "\n".join(cleaned).strip()
+    else:
+        # Strategy 2: extract customer-facing sentences
+        sentences = re.split(r'(?<=[.!?])\s+', text.strip())
+        useful = [
+            s for s in sentences
+            if any(kw in s.lower() for kw in _CUSTOMER_KEYWORDS)
         ]
-        return " ".join(cleaned_sentences).strip()
+        if useful:
+            _STRIP_RE = re.compile(
+                r'^(I need to (state|say|mention|tell|note) that\s*'
+                r'|I should (state|say|mention|tell|note) that\s*'
+                r'|I want to (state|say|mention|tell|note) that\s*)',
+                re.IGNORECASE,
+            )
+            cleaned_sentences = [_STRIP_RE.sub('', s).strip() for s in useful]
+            cleaned_sentences = [
+                s[0].upper() + s[1:] if s else s for s in cleaned_sentences
+            ]
+            result = " ".join(cleaned_sentences).strip()
+        else:
+            result = text.strip()
 
-    # --- Fallback: return original ---
-    return text.strip()
+    # Strip surrounding quotes if the model wrapped the response in quotes
+    if (result.startswith('"') and result.endswith('"')) or (result.startswith("'") and result.endswith("'")):
+        result = result[1:-1].strip()
+
+    return result
 
 
 # ---------------------------------------------------------------------------
@@ -259,8 +254,7 @@ def main():
                 model=MODEL,
                 messages=messages,
                 tools=TOOLS,
-                think=False,
-                options={"temperature": 0.0, "num_predict": 256},
+                options={"temperature": 0.0, "num_predict": 512},
             )
         except Exception as exc:
             print(f"\n[Error] LLM call failed: {exc}")
@@ -272,8 +266,12 @@ def main():
 
         # --- Tool-call handling -----------------------------------------------
         if response.message.tool_calls:
-            # Append the assistant's tool-call message exactly once
-            messages.append(response.message)
+            # Append clean assistant tool-call message without internal thinking history
+            messages.append({
+                "role": "assistant",
+                "content": "",
+                "tool_calls": response.message.tool_calls,
+            })
 
             sf_start = time.perf_counter()
 
@@ -294,15 +292,12 @@ def main():
             print(f"[Timing] Salesforce tool: {sf_time:.2f}s")
 
             # --- Final LLM call (generate customer-facing answer) -------------
-            messages.append({"role": "user", "content": FINAL_ANSWER_INSTRUCTION})
-
             final_start = time.perf_counter()
             try:
                 final_response = chat(
                     model=MODEL,
                     messages=messages,
-                    think=False,
-                    options={"temperature": 0.2, "num_predict": 100},
+                    options={"temperature": 0.2, "num_predict": 1024},
                 )
             except Exception as exc:
                 print(f"\n[Error] Final LLM call failed: {exc}")
@@ -312,15 +307,16 @@ def main():
             final_time = time.perf_counter() - final_start
             print(f"[Timing] Final LLM: {final_time:.2f}s")
 
-            # Remove the temporary instruction, keep the assistant reply
-            messages.pop()  # remove FINAL_ANSWER_INSTRUCTION
-
-            answer = clean_response(final_response.message.content)
+            raw_answer = final_response.message.content or ""
+            answer = clean_response(raw_answer)
+            if not answer:
+                answer = "Your order details have been retrieved from Salesforce."
             messages.append({"role": "assistant", "content": answer})
 
         else:
             # No tool call — direct answer (FAQ / general question)
-            answer = clean_response(response.message.content)
+            raw_answer = response.message.content or ""
+            answer = clean_response(raw_answer)
             messages.append({"role": "assistant", "content": answer})
 
         total_time = time.perf_counter() - turn_start
