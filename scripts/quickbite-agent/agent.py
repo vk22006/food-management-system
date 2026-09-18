@@ -245,10 +245,10 @@ def main():
 
         messages.append({"role": "user", "content": user_input})
 
-        turn_start = time.perf_counter()
+        # turn_start = time.perf_counter()
 
         # --- Initial LLM call (may request tool calls) -----------------------
-        llm_start = time.perf_counter()
+        # llm_start = time.perf_counter()
         try:
             response = chat(
                 model=MODEL,
@@ -261,8 +261,8 @@ def main():
             messages.pop()
             continue
 
-        llm_time = time.perf_counter() - llm_start
-        print(f"[Timing] Initial LLM: {llm_time:.2f}s")
+        # llm_time = time.perf_counter() - llm_start
+        # print(f"[Timing] Initial LLM: {llm_time:.2f}s")
 
         # --- Tool-call handling -----------------------------------------------
         if response.message.tool_calls:
@@ -273,7 +273,7 @@ def main():
                 "tool_calls": response.message.tool_calls,
             })
 
-            sf_start = time.perf_counter()
+            # sf_start = time.perf_counter()
 
             for tool_call in response.message.tool_calls:
                 tool_name = tool_call.function.name
@@ -288,11 +288,11 @@ def main():
                 result_str = execute_tool(tool_name, arguments)
                 messages.append({"role": "tool", "content": result_str})
 
-            sf_time = time.perf_counter() - sf_start
-            print(f"[Timing] Salesforce tool: {sf_time:.2f}s")
+            # sf_time = time.perf_counter() - sf_start
+            # print(f"[Timing] Salesforce tool: {sf_time:.2f}s")
 
             # --- Final LLM call (generate customer-facing answer) -------------
-            final_start = time.perf_counter()
+            # final_start = time.perf_counter()
             try:
                 final_response = chat(
                     model=MODEL,
@@ -304,8 +304,8 @@ def main():
                 messages.pop()
                 continue
 
-            final_time = time.perf_counter() - final_start
-            print(f"[Timing] Final LLM: {final_time:.2f}s")
+            # final_time = time.perf_counter() - final_start
+            # print(f"[Timing] Final LLM: {final_time:.2f}s")
 
             raw_answer = final_response.message.content or ""
             answer = clean_response(raw_answer)
@@ -319,8 +319,8 @@ def main():
             answer = clean_response(raw_answer)
             messages.append({"role": "assistant", "content": answer})
 
-        total_time = time.perf_counter() - turn_start
-        print(f"[Timing] Total turn: {total_time:.2f}s")
+        # total_time = time.perf_counter() - turn_start
+        # print(f"[Timing] Total turn: {total_time:.2f}s")
 
         print(f"\nQuickBite AI: {answer}")
 
