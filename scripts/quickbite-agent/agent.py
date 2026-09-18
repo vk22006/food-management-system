@@ -254,7 +254,7 @@ def main():
                 model=MODEL,
                 messages=messages,
                 tools=TOOLS,
-                options={"temperature": 0.0, "num_predict": 512},
+                options={"temperature": 0.0, "num_predict": 1536},
             )
         except Exception as exc:
             print(f"\n[Error] LLM call failed: {exc}")
@@ -297,7 +297,7 @@ def main():
                 final_response = chat(
                     model=MODEL,
                     messages=messages,
-                    options={"temperature": 0.2, "num_predict": 1024},
+                    options={"temperature": 0.2, "num_predict": 1536},
                 )
             except Exception as exc:
                 print(f"\n[Error] Final LLM call failed: {exc}")
@@ -317,6 +317,8 @@ def main():
             # No tool call — direct answer (FAQ / general question)
             raw_answer = response.message.content or ""
             answer = clean_response(raw_answer)
+            if not answer:
+                answer = "I'm here to help! Could you please rephrase or provide your order number?"
             messages.append({"role": "assistant", "content": answer})
 
         # total_time = time.perf_counter() - turn_start
