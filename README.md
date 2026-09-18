@@ -4,6 +4,8 @@ A Salesforce-based food delivery management platform for managing restaurants, m
 
 The project demonstrates Salesforce declarative development, Apex programming, automation, security and sharing, Experience Cloud, REST API integration, Postman testing, reporting, dashboards, and a local AI customer-support agent.
 
+![screenshot](docs/img/image.png)
+
 ---
 
 ## Overview
