@@ -1,5 +1,7 @@
 from pathlib import Path
 from ollama import chat
+from tools import get_menu_tool
+from tools import get_order_tool
 
 
 # Load QuickBite knowledge base
@@ -12,7 +14,7 @@ You are the QuickBite Customer Support Assistant.
 
 Your job is to answer customer questions about QuickBite.
 
-Use ONLY the information provided in the QuickBite knowledge base below.
+Use the QuickBite knowledge base below as the source of truth.
 
 Do not invent:
 - delivery times
@@ -25,10 +27,13 @@ Do not invent:
 - business policies
 - facts about a customer's order
 
-If the knowledge base does not contain the answer, clearly say that the
-information is not available rather than guessing.
+All QuickBite monetary amounts are in Indian Rupees (INR).
+When displaying prices or monetary amounts, use the ₹ symbol.
 
-Keep responses concise, friendly, and suitable for a customer support chat.
+If information about the customer's actual order is required, use an
+available Salesforce tool rather than guessing.
+
+Keep responses concise, friendly, and suitable for customer support.
 
 QUICKBITE KNOWLEDGE BASE:
 -------------------------
@@ -37,20 +42,103 @@ QUICKBITE KNOWLEDGE BASE:
 """
 
 
+tools = [
+    {
+        "type": "function",
+        "function": {
+            "name": "get_menu",
+            "description": "Get the current QuickBite menu from Salesforce. Use this when the customer asks about available food, menu items, or what they can order.",
+            "parameters": {
+                "type": "object",
+                "properties": {},
+                "required": []
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "get_order",
+            "description": (
+                "Look up a QuickBite customer's order using its order number, "
+                "such as ORD-00006. Use this when the customer asks about their "
+                "order status, order details, items, total, or delivery."
+            ),
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "order_name": {
+                        "type": "string",
+                        "description": "The QuickBite order number, such as ORD-00006."
+                    }
+                },
+                "required": ["order_name"]
+            }
+        }
+    }    
+]
+
+
+messages = [
+    {
+        "role": "system",
+        "content": system_prompt
+    },
+    {
+        "role": "user",
+        "content": "What is the status of my order ORD-00006?"
+    }
+]
+
+
 response = chat(
     model="qwen3:4b",
-    messages=[
-        {
-            "role": "system",
-            "content": system_prompt
-        },
-        {
-            "role": "user",
-            "content": 'My order says "Preparing". What does that mean?'
-        }
-    ]
+    messages=messages,
+    tools=tools
 )
 
+if response.message.tool_calls:
+    for tool_call in response.message.tool_calls:
 
-print("\nQuickBite AI:")
-print(response.message.content)
+        tool_name = tool_call.function.name
+
+        if tool_name == "get_menu":
+            print("\n[Agent] Calling Salesforce: get_menu()")
+            result = get_menu_tool()
+
+        elif tool_name == "get_order":
+            order_name = tool_call.function.arguments["order_name"]
+
+            print(
+                f"\n[Agent] Calling Salesforce: "
+                f"get_order({order_name})"
+            )
+
+            result = get_order_tool(order_name)
+
+        else:
+            result = {
+                "success": False,
+                "message": f"Unknown tool: {tool_name}"
+            }
+
+        messages.append(response.message)
+
+        messages.append(
+            {
+                "role": "tool",
+                "content": str(result)
+            }
+        )
+
+    final_response = chat(
+        model="qwen3:4b",
+        messages=messages
+    )
+
+    print("\nQuickBite AI:")
+    print(final_response.message.content)
+
+else:
+    print("\nQuickBite AI:")
+    print(response.message.content)
