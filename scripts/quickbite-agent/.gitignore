@@ -1,6 +1,7 @@
 
 # Confidential information
-.env.example
+.env
 
-# Local Environemnt
+# Local Environment
 .venv
+__pycache__
