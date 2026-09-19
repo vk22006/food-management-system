@@ -168,7 +168,7 @@ CEO
 
 ---
 
-## உள்ளூர் AI Agent
+## Local AI Agent
 
 Agent பின்வரும் இடத்தில் உள்ளது:
 
