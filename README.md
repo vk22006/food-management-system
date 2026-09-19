@@ -1,4 +1,4 @@
-# Food Order Management System
+# QuickBite: A Salesforce Food Order Management System with AI Integration
 
 English | [தமிழ்](docs/README_TA.md)
 
