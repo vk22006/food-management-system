@@ -20,11 +20,11 @@ Salesforce அடிப்படையிலான உணவு விநிய�
 - **அறிக்கைகள் மற்றும் Dashboard-கள்** - செயல்பாட்டு மற்றும் வருவாய் பகுப்பாய்வு.
 - **REST API** - தனிப்பயன் Apex REST Endpoints மூலம் வெளிப்புற அமைப்புகளுடன் ஒருங்கிணைப்பு.
 - **Postman** - API சோதனை மற்றும் செயல்முறை விளக்கம்.
-- **உள்ளூர் AI ஆதரவு** - FAQ, மெனு, ஆர்டர் மற்றும் விநியோகம் தொடர்பான கேள்விகளுக்கான Qwen3 4B + Ollama AI Agent.
+- **Local AI ஆதரவு** - FAQ, மெனு, ஆர்டர் மற்றும் விநியோகம் தொடர்பான கேள்விகளுக்கான Qwen3 4B + Ollama AI Agent.
 
 ![cli-agent](img/agent.png)
 
-> AI Assistant என்பது உள்ளூர் AI ஒருங்கிணைப்பு ஆகும். இது Salesforce Agentforce அல்ல.
+> AI Assistant என்பது Local AI ஒருங்கிணைப்பு ஆகும். இது Salesforce Agentforce அல்ல.
 
 ---
 
@@ -186,7 +186,7 @@ get_order(order_name)
 get_delivery(order_name)
 ```
 
-Agent ஒரு உள்ளூர் FAQ Knowledge Base-ஐ பயன்படுத்துகிறது. மாறிக்கொண்டிருக்கும் ஆர்டர் மற்றும் விநியோகத் தகவல்களுக்கு **Salesforce Data-ஐ உண்மையான தகவல் மூலமாக** பயன்படுத்துகிறது.
+Agent ஒரு local FAQ Knowledge Base-ஐ பயன்படுத்துகிறது. மாறிக்கொண்டிருக்கும் ஆர்டர் மற்றும் விநியோகத் தகவல்களுக்கு **Salesforce Data-ஐ உண்மையான தகவல் மூலமாக** பயன்படுத்துகிறது.
 
 இதன் மூலம் Agent போன்ற கேள்விகளுக்கு பதிலளிக்க முடியும்:
 
@@ -257,7 +257,7 @@ sf project deploy start --target-org FoodOrderOrg --source-dir force-app
 sf apex run test --target-org FoodOrderOrg --test-level RunLocalTests
 ```
 
-### உள்ளூர் AI Agent
+### Local AI Agent
 
 ```bash
 cd scripts/quickbite-agent
