@@ -1,5 +1,7 @@
 # Food Order Management System
 
+English | [தமிழ்](docs/README_TA.md)
+
 A Salesforce-based food delivery management platform for managing restaurants, menus, customer orders, deliveries, automation, reporting, customer access, REST APIs, and AI-assisted support.
 
 ![screenshot](docs/img/image.png)
