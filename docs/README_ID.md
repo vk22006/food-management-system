@@ -11,25 +11,15 @@ Platform manajemen pengiriman makanan berbasis Salesforce untuk mengelola restor
 ## Fitur
 
 - **Manajemen Restoran & Menu** - Mengelola restoran, jenis masakan, item menu, harga, dan ketersediaan.
-
 - **Manajemen Pesanan** - Mengelola pesanan pelanggan, item pesanan, perhitungan total otomatis, dan validasi status.
-
 - **Manajemen Pengiriman** - Membuat pengiriman, menetapkan mitra pengiriman, melacak status, dan melakukan sinkronisasi.
-
 - **Otomatisasi** - Record-Triggered Flow untuk pesanan, pengiriman, pembaruan status, dan notifikasi.
-
 - **Pengembangan Apex** - Service Class, Trigger, logika bisnis, dan Apex REST Controller.
-
 - **Keamanan** - OWD, Role Hierarchy, Permission Set, Sharing Rule, dan Field-Level Security.
-
 - **Experience Cloud** - Portal pelanggan untuk melihat restoran, menu, pesanan, dan informasi pengiriman.
-
 - **Reports & Dashboard** - Analitik operasional dan pendapatan.
-
 - **REST API** - Integrasi dengan sistem eksternal melalui Apex REST Endpoint khusus.
-
 - **Postman** - Pengujian dan demonstrasi API.
-
 - **Dukungan AI Lokal** - Agent Qwen3 4B + Ollama untuk menangani pertanyaan FAQ, menu, pesanan, dan pengiriman.
 
 ![cli-agent](img/agent.png)
@@ -95,17 +85,11 @@ Assigned → Picked Up → Out for Delivery → Delivered
 Komponen Apex utama:
 
 * `OrderService` - Pembuatan pesanan, pengambilan data, pembaruan status, dan logika bisnis.
-
 * `OrderTotalCalculator` - Perhitungan total pesanan dengan pendekatan Bulkified.
-
 * `DeliveryChargeCalculator` - Perhitungan biaya pengiriman.
-
 * `OrderItemTrigger` - Memperbarui total pesanan ketika item pesanan mengalami perubahan.
-
 * `MenuRestController` - Menu REST API.
-
 * `OrderRestController` - Order REST API.
-
 * `DeliveryRestController` - Delivery REST API.
 
 Apex Tests mencakup pengujian Trigger, Service, perhitungan, validasi, dan fungsionalitas REST.
