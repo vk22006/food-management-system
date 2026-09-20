@@ -1,4 +1,3 @@
-````markdown
 # QuickBite: AI एकीकरण के साथ Salesforce खाद्य ऑर्डर प्रबंधन प्रणाली
 
 [English](../README.md) | [தமிழ்](README_TA.md) | [简体中文](README_ZH.md) | हिन्दी
