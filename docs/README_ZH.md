@@ -31,24 +31,7 @@
 
 ## 系统架构
 
-```text
-                         QuickBite
-                             |
-             +---------------+---------------+
-             |               |               |
-        Salesforce      Experience       External
-         Platform          Cloud        Integrations
-             |               |               |
-       +-----+-----+         |         +-----+-----+
-       |     |     |         |         |           |
-     Flow  Apex  Security    |      Postman     AI Agent
-       |     |     |         |                    |
-       +-----+-----+         |                 Qwen3 4B
-             |               |                    |
-             +---------------+--------------------+
-                             |
-                      Salesforce Data
-````
+![flowchart](img/flowchart.png)
 
 ---
 

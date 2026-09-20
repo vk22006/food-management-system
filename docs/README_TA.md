@@ -30,24 +30,7 @@ Salesforce அடிப்படையிலான உணவு விநிய�
 
 ## கட்டமைப்பு
 
-```text
-                         QuickBite
-                             |
-             +---------------+---------------+
-             |               |               |
-        Salesforce      Experience       External
-         Platform          Cloud        Integrations
-             |               |               |
-       +-----+-----+         |         +-----+-----+
-       |     |     |         |         |           |
-     Flow  Apex  Security    |      Postman     AI Agent
-       |     |     |         |                    |
-       +-----+-----+         |                 Qwen3 4B
-             |               |                    |
-             +---------------+--------------------+
-                             |
-                      Salesforce Data
-````
+![flowchart](img/flowchart.png)
 
 ---
 
