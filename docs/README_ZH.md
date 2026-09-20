@@ -1,4 +1,3 @@
-````markdown
 # QuickBite：基于 Salesforce 的食品订单管理系统与 AI 集成
 
 [English](../README.md) | [தமிழ்](README_TA.md) | 简体中文
