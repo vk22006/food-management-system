@@ -1,6 +1,6 @@
 # QuickBite: A Salesforce Food Order Management System with AI Integration
 
-English | [தமிழ்](docs/README_TA.md)
+English | [தமிழ்](docs/README_TA.md) | [简体中文](docs/README_ZH.md)
 
 A Salesforce-based food delivery management platform for managing restaurants, menus, customer orders, deliveries, automation, reporting, customer access, REST APIs, and AI-assisted support.
 
