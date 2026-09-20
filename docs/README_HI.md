@@ -1,6 +1,6 @@
 # QuickBite: AI एकीकरण के साथ Salesforce खाद्य ऑर्डर प्रबंधन प्रणाली
 
-[English](../README.md) | [தமிழ்](README_TA.md) | [简体中文](README_ZH.md) | हिन्दी
+[English](../README.md) | [தமிழ்](README_TA.md) | [简体中文](README_ZH.md) | हिन्दी | [Bahasa Indonesia](README_ID.md)
 
 Salesforce पर आधारित खाद्य वितरण प्रबंधन प्लेटफ़ॉर्म, जो रेस्तराँ, मेनू, ग्राहक ऑर्डर, डिलीवरी, स्वचालन, रिपोर्टिंग, ग्राहक पहुँच, REST APIs और AI-सहायित सहायता को प्रबंधित करता है।
 

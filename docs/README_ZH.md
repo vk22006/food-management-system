@@ -1,6 +1,6 @@
 # QuickBite：基于 Salesforce 的食品订单管理系统与 AI 集成
 
-[English](../README.md) | [தமிழ்](README_TA.md) | 简体中文 | [हिन्दी](README_HI.md)
+[English](../README.md) | [தமிழ்](README_TA.md) | 简体中文 | [हिन्दी](README_HI.md) | [Bahasa Indonesia](README_ID.md)
 
 一个基于 Salesforce 的食品配送管理平台，用于管理餐厅、菜单、客户订单、配送、自动化流程、报表、客户访问、REST API 以及 AI 辅助服务。
 
