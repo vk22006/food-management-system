@@ -30,24 +30,7 @@ A Salesforce-based food delivery management platform for managing restaurants, m
 
 ## Architecture
 
-```text
-                         QuickBite
-                             |
-             +---------------+---------------+
-             |               |               |
-        Salesforce      Experience       External
-         Platform          Cloud        Integrations
-             |               |               |
-       +-----+-----+         |         +-----+-----+
-       |     |     |         |         |           |
-     Flow  Apex  Security    |      Postman     AI Agent
-       |     |     |         |                    |
-       +-----+-----+         |                 Qwen3 4B
-             |               |                    |
-             +---------------+--------------------+
-                             |
-                      Salesforce Data
-````
+![flowchart](docs/img/flowchart.png)
 
 ---
 
